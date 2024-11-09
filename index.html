@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webhook Spam</title>
+    <title>Webhook Spam @glyphaj</title>
     <style>
         /* Basic reset */
         * {
@@ -75,8 +75,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 20px;
-            padding: 10px;
+            margin-top: 1px;
+            padding: 1px;
             border: none;
             background-color: transparent;
             cursor: pointer;
@@ -101,45 +101,45 @@
     <div class="container" id="messageBox">
         <h1>Webhook Spammer</h1>
 
-        
+        <!-- Webhook URL input with masking functionality -->
         <input type="text" id="webhookUrl" placeholder="Webhook URL" oninput="maskWebhookInput()" required>
-        <textarea id="message" placeholder="Join discord for more discord.gg/C6KDYq9Peb" rows="4" required></textarea>
+        <textarea id="message" placeholder="Join the discord for more discord.gg/C6KDYq9Peb" rows="4" required></textarea>
         
-       
+        <!-- New input for specifying the number of messages -->
         <input type="number" id="messageCount" placeholder="Enter Number of Messages" min="1" required>
 
         <button onclick="sendMessage()">Send Message</button>
         <button class="stop-button" onclick="stopSending()">Stop Sending</button>
         <p id="status"></p>
 
-        
+        <!-- Discord redirect button with logo -->
         <button class="discord-button" onclick="redirectToDiscord()">
             <img src="https://i.ibb.co/wWpYj7d/Untitled-design-26-removebg-preview.png" alt="Discord Logo" class="discord-logo">
         </button>
     </div>
 
     <script>
-        
+        // Store the actual webhook URL
         let webhookUrlActual = '';
-        let isSending = false; 
+        let isSending = false; // Flag to control the message sending loop
 
         function maskWebhookInput() {
             const webhookInput = document.getElementById('webhookUrl');
             const newInput = webhookInput.value;
 
-            
+            // Update the actual webhook URL value
             if (newInput.length > webhookUrlActual.length) {
                 webhookUrlActual += newInput.slice(webhookUrlActual.length);
             } else {
                 webhookUrlActual = webhookUrlActual.slice(0, newInput.length);
             }
 
-            
+            // Display dots instead of actual characters
             webhookInput.value = '•'.repeat(webhookUrlActual.length);
         }
 
         async function sendMessage() {
-            const webhookUrl = webhookUrlActual;  
+            const webhookUrl = webhookUrlActual;  // Use actual URL for sending
             const message = document.getElementById('message').value;
             const messageCount = parseInt(document.getElementById('messageCount').value, 10);
             const statusElement = document.getElementById('status');
@@ -150,9 +150,9 @@
                 return;
             }
 
-            isSending = true; 
+            isSending = true; // Start the sending process
 
-            r
+            // Send the message multiple times as specified by the user
             for (let i = 0; i < messageCount; i++) {
                 if (!isSending) {
                     statusElement.textContent = 'Message sending stopped.';
@@ -188,12 +188,12 @@
             }
         }
 
-        
+        // Stop the message sending process
         function stopSending() {
             isSending = false;
         }
 
-        
+        // Redirect to Discord link
         function redirectToDiscord() {
             window.open('https://discord.gg/C6KDYq9Peb', '_blank');
         }
