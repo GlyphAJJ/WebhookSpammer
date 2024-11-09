@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Spam</title>
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Galaxy background styling */
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            background: url('https://i.ibb.co/G7kWV8h/Untitled-design-23.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* Form container styling with specified background */
+        .container {
+            text-align: center;
+            background: url('https://i.ibb.co/60HDq1F/Untitled-design-22.png') no-repeat center center;
+            background-size: cover;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        /* Updated input and textarea styling */
+        input, textarea {
+            background-color: #000;
+            color: #fff;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: transparent;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: transparent;
+        }
+
+        /* Discord button styling */
+        .discord-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 10px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .discord-logo {
+            width: 1px;
+            height: 1px;
+        }
+
+        /* Stop button styling */
+        .stop-button {
+            background-color: transparent;
+        }
+
+        .stop-button:hover {
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="messageBox">
+        <h1>Webhook Spammer</h1>
+
+        
+        <input type="text" id="webhookUrl" placeholder="Webhook URL" oninput="maskWebhookInput()" required>
+        <textarea id="message" placeholder="Join discord for more discord.gg/C6KDYq9Peb" rows="4" required></textarea>
+        
+       
+        <input type="number" id="messageCount" placeholder="Enter Number of Messages" min="1" required>
+
+        <button onclick="sendMessage()">Send Message</button>
+        <button class="stop-button" onclick="stopSending()">Stop Sending</button>
+        <p id="status"></p>
+
+        
+        <button class="discord-button" onclick="redirectToDiscord()">
+            <img src="https://i.ibb.co/wWpYj7d/Untitled-design-26-removebg-preview.png" alt="Discord Logo" class="discord-logo">
+        </button>
+    </div>
+
+    <script>
+        
+        let webhookUrlActual = '';
+        let isSending = false; 
+
+        function maskWebhookInput() {
+            const webhookInput = document.getElementById('webhookUrl');
+            const newInput = webhookInput.value;
+
+            
+            if (newInput.length > webhookUrlActual.length) {
+                webhookUrlActual += newInput.slice(webhookUrlActual.length);
+            } else {
+                webhookUrlActual = webhookUrlActual.slice(0, newInput.length);
+            }
+
+            
+            webhookInput.value = '•'.repeat(webhookUrlActual.length);
+        }
+
+        async function sendMessage() {
+            const webhookUrl = webhookUrlActual;  
+            const message = document.getElementById('message').value;
+            const messageCount = parseInt(document.getElementById('messageCount').value, 10);
+            const statusElement = document.getElementById('status');
+
+            if (!webhookUrl || !message || isNaN(messageCount) || messageCount < 1) {
+                statusElement.textContent = 'Please fill in all fields with valid values.';
+                statusElement.style.color = 'red';
+                return;
+            }
+
+            isSending = true; 
+
+            r
+            for (let i = 0; i < messageCount; i++) {
+                if (!isSending) {
+                    statusElement.textContent = 'Message sending stopped.';
+                    statusElement.style.color = 'red';
+                    break;
+                }
+
+                try {
+                    const response = await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ content: message })
+                    });
+
+                    if (!response.ok) {
+                        statusElement.textContent = 'Some messages could not be sent.';
+                        statusElement.style.color = 'orange';
+                        return;
+                    }
+                } catch (error) {
+                    statusElement.textContent = 'Error sending message. See console for details.';
+                    statusElement.style.color = 'red';
+                    console.error('Error:', error);
+                    return;
+                }
+            }
+
+            if (isSending) {
+                statusElement.textContent = 'Messages sent successfully!';
+                statusElement.style.color = 'lightgreen';
+            }
+        }
+
+        
+        function stopSending() {
+            isSending = false;
+        }
+
+        
+        function redirectToDiscord() {
+            window.open('https://discord.gg/C6KDYq9Peb', '_blank');
+        }
+    </script>
+</body>
+</html>
